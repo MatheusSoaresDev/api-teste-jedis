@@ -13,7 +13,6 @@ RUN apt-get -y install apt-utils nano wget dialog vim
 ADD . /var/www
 RUN chown -R www-data:www-data /var/www
 
-RUN echo "\e[1;33mInstall important libraries\e[0m"
 RUN apt-get -y install --fix-missing \
     apt-utils \
     build-essential \

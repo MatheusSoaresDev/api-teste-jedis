@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AccessTokenController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -14,9 +15,14 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-//Route::post('/auth', App\Http\Controllers\AuthController::class);
-//Route::get('/grant-password', App\Http\Controllers\GrantPasswordController::class);
+Route::post('oauth/token', AccessTokenController::class);
 
-Route::middleware('auth:api')->get('/user', function (Request $request) {
-    dd('teste');
+Route::middleware('auth:api')->group(function () {
+    Route::get('user', function (Request $request) {
+        dd($request->user());
+    })->middleware(['scope:admin']);
+
+    Route::get('listar/produtos', function (Request $request) {
+        dd('Listar produtos');
+    })->middleware(['scope:admin,user']);
 });

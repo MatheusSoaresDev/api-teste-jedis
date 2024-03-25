@@ -27,8 +27,14 @@ class AuthServiceProvider extends ServiceProvider
 
         Passport::enablePasswordGrant();
         Passport::hashClientSecrets();
-        Passport::tokensExpireIn(now()->addDays(15));
-        Passport::refreshTokensExpireIn(now()->addDays(30));
-        Passport::personalAccessTokensExpireIn(now()->addMonths(6));
+        Passport::tokensExpireIn(now()->addHour());
+        Passport::refreshTokensExpireIn(now()->addHours(2));
+
+        Passport::tokensCan([
+            'admin' => 'Add, Edit, Delete Data Scope',
+            'user' => 'Read Data Scope',
+        ]);
+
+        Passport::setDefaultScope(['user']);
     }
 }

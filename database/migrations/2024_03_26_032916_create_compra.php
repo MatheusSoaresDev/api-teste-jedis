@@ -13,7 +13,11 @@ return new class extends Migration
     {
         Schema::create('compra', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
+            $table->uuid('produto_id');
+            $table->bigInteger('user_id');
+
+            $table->foreign('produto_id')->references('id')->on('produtos');
+            $table->foreign('user_id')->references('id')->on('users');
         });
     }
 

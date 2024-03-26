@@ -34,5 +34,9 @@ Route::middleware('auth:api')->group(function () {
 
         Route::get('produto', [ProdutoController::class, 'findAll']);
         Route::get('produto/{id}', [ProdutoController::class, 'findById']);
+
+        Route::post('user/compra/{id}', [UserController::class, 'realizaCompra']);
+        Route::get('user/compra', [UserController::class, 'listaCompras']);
+        Route::get('user/compra/{id}', [UserController::class, 'listaCompra']);
     });
 });

@@ -30,6 +30,6 @@ class Produto extends Model
 
     public function users(): BelongsToMany
     {
-        return $this->belongsToMany(User::class);
+        return $this->belongsToMany(User::class, 'compra', 'produto_id', 'user_id');
     }
 }

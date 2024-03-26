@@ -43,6 +43,6 @@ class User extends Authenticatable
 
     public function compras(): BelongsToMany
     {
-        return $this->belongsToMany(Produto::class);
+        return $this->belongsToMany(Produto::class, 'compra', 'user_id', 'produto_id');
     }
 }

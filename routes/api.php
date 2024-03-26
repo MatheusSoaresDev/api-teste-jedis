@@ -1,8 +1,8 @@
 <?php
 
 use App\Http\Controllers\AccessTokenController;
+use App\Http\Controllers\ProdutoController;
 use App\Http\Controllers\UserController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -23,9 +23,16 @@ Route::middleware('auth:api')->group(function () {
 
     Route::group(['middleware' => 'scope:admin'], function () {
         Route::put('user/{id}', [UserController::class, 'promoteToAdmin']);
+
+        Route::post('produto', [ProdutoController::class, 'create']);
+        Route::put('produto/{id}', [ProdutoController::class, 'update']);
+        Route::delete('produto/{id}', [ProdutoController::class, 'delete']);
     });
 
     Route::group(['middleware' => 'scope:admin,user'], function () {
         Route::delete('logout', [AccessTokenController::class, 'revokeAccessToken']);
+
+        Route::get('produto', [ProdutoController::class, 'findAll']);
+        Route::get('produto/{id}', [ProdutoController::class, 'findById']);
     });
 });

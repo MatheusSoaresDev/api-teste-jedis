@@ -4,6 +4,7 @@ namespace App\Exceptions;
 
 use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Exceptions\ThrottleRequestsException;
 use Illuminate\Validation\ValidationException;
 use Laravel\Passport\Exceptions\MissingScopeException;
 use Throwable;
@@ -37,6 +38,14 @@ class Handler extends ExceptionHandler
 
     public function render($request, Throwable $e)
     {
+        if ($e instanceof ThrottleRequestsException) {
+            return response()->json([
+                'message' => 'Você atingiu o limite de requisições.',
+                'status' => 'error',
+                'code' => 429
+            ], 429);
+        }
+
         if ($e instanceof AuthenticationException) {
             return response()->json([
                 'message' => 'Você não está autenticado.',

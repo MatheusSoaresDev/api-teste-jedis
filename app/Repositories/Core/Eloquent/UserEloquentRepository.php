@@ -16,7 +16,7 @@ class UserEloquentRepository extends BaseEloquentRepository implements UserRepos
 
     public function getUserWithRoleByEmail(string $email): User
     {
-        return $this->entity->whereEmail($email)->with('role')->first();
+        return $this->entity->whereEmail($email)->with('role')->firstOrFail();
     }
 
     public function promoteToAdmin(string $id): bool
@@ -25,5 +25,10 @@ class UserEloquentRepository extends BaseEloquentRepository implements UserRepos
         $user->role = Role::whereRole(RoleEnum::ADMIN->value)->first()->role;
 
         return $user->save();
+    }
+
+    public function realizaCompra()
+    {
+        dd('realiza compra');
     }
 }

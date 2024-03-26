@@ -7,19 +7,26 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Ramsey\Uuid\Uuid;
 
-class Role extends Model
+class Produto extends Model
 {
     use HasFactory;
 
     protected $keyType = 'string';
-    protected $fillable = ['id', 'role', 'created_at', 'updated_at'];
-    protected $table = 'role';
+    protected $table = 'produtos';
     public $timestamps = true;
 
-    protected static function booted(): void
-    {
-        static::creating(fn(Role $role) => $role->id = (string) Uuid::uuid4());
-    }
+    protected $fillable = [
+        'id',
+        'nome',
+        'descricao',
+        'preco',
+        'quantidade',
+    ];
+
+    protected $hidden = [
+        'created_at',
+        'updated_at',
+    ];
 
     public function users(): BelongsToMany
     {

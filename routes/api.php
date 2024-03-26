@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AccessTokenController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -15,14 +16,16 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::post('oauth/token', AccessTokenController::class);
+Route::post('login', [AccessTokenController::class, 'generateAccessToken']);
+Route::post('user', [UserController::class, 'register']);
 
 Route::middleware('auth:api')->group(function () {
-    Route::get('user', function (Request $request) {
-        dd($request->user());
-    })->middleware(['scope:admin']);
 
-    Route::get('listar/produtos', function (Request $request) {
-        dd('Listar produtos');
-    })->middleware(['scope:admin,user']);
+    Route::group(['middleware' => 'scope:admin'], function () {
+        Route::put('user/{id}', [UserController::class, 'promoteToAdmin']);
+    });
+
+    Route::group(['middleware' => 'scope:admin,user'], function () {
+        Route::delete('logout', [AccessTokenController::class, 'revokeAccessToken']);
+    });
 });

@@ -16,7 +16,7 @@ class Role extends Model
     protected $table = 'role';
     public $timestamps = true;
 
-    protected static function booted()
+    protected static function booted(): void
     {
         static::creating(fn(Role $role) => $role->id = (string) Uuid::uuid4());
     }

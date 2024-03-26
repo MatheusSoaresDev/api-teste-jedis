@@ -2,7 +2,9 @@
 
 namespace App\Exceptions;
 
+use Illuminate\Auth\AuthenticationException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Validation\ValidationException;
 use Laravel\Passport\Exceptions\MissingScopeException;
 use Throwable;
 
@@ -24,21 +26,32 @@ class Handler extends ExceptionHandler
      */
     public function register(): void
     {
-        $this->reportable(function (Throwable $e) {
-            //
+        $this->renderable(function (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'code' => 400,
+                'message' => $e->errors()
+            ], 400);
         });
     }
 
     public function render($request, Throwable $e)
     {
+        if ($e instanceof AuthenticationException) {
+            return response()->json([
+                'message' => 'Você não está autenticado.',
+                'status' => 'error',
+                'code' => 401
+            ], 401);
+        }
+
         if ($e instanceof MissingScopeException) {
             return response()->json([
-                'message' => 'You are not authorize to access this function.',
+                'message' => 'Você não tem permissão para acessar este recurso.',
                 'status' => 'error',
                 'code' => 403
             ], 403);
         }
-
         return parent::render($request, $e);
     }
 }

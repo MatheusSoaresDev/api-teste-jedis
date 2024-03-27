@@ -4,6 +4,7 @@ namespace App\Repositories\Core\Eloquent;
 
 use App\Repositories\Contracts\RepositoryInterface;
 use Exception;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 
 class BaseEloquentRepository implements RepositoryInterface
@@ -18,7 +19,7 @@ class BaseEloquentRepository implements RepositoryInterface
         $this->entity = $this->resolveEntity();
     }
 
-    public function findAll()
+    public function findAll(): Collection
     {
         return $this->entity->all();
     }

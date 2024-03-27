@@ -1,66 +1,184 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# API TEST JEDIS
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Descrição
+Esta é minha aplicação teste para a vaga de dev php na jedis. Trata-se de uma aplicação laravel 10 para 
+gestão de produtos com autenticação de usuários. A autenticação de usuários é feita com o laravel passport no formato
+grant type password. O usuário deve fornecer um email e senha para obter um token de acesso. Este token de acesso deverá
+ser utilizado para acessar as rotas protegidas da aplicação. As rotas possuem escopos para definir se o usuário da aplica
+ção possui acesso à funcionalidade. A aplicação possui as seguintes rotas:
 
-## About Laravel
+## Pré-requisitos
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+Certifique-se de ter os seguintes itens instalados:
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+- Docker
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Como Iniciar
 
-## Learning Laravel
+1. **Clone o Repositório:**
+    ```bash
+    git clone https://github.com/MatheusSoaresDev/api-teste-jedis.git
+    ```
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+2. **Navegue até o Diretório do Projeto:**
+    ```bash
+    cd api-teste-jedis
+    ```
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+3. **Criar o arquivo .env**
+    ```bash
+   cp .env.example .env
+    ```
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+4. **Execute e entre no Contêiner Docker:**
+    ```bash
+    docker compose up -d
+   docker exec -it api-produtos bash
+    ```
 
-## Laravel Sponsors
+5. **Rode as configurações do laravel**
+    ```bash
+    php artisan key:generate
+    php artisan migrate
+    php artisan db:seed DatabaseSeeder
+    php artisan passport:client --password
+    ```
+6. **Após gerar a chave. Copie o client id e o cliente secret e cole no .env**
+    ```bash
+    PASSPORT_PASSWORD_CLIENT_ID={client_id}
+    PASSPORT_PASSWORD_CLIENT_SECRET={client_secret}
+    ```
+6. **Execute os testes**
+    ```bash
+    php artisan test
+    ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+## Rotas da API
 
-### Premium Partners
+### Login: `/api/login`
+- **Descrição:** Rota para autenticar um usuário e obter um token e um refresh de acesso.
+- **Escopo: [Aberto]**
+- **Método:** <span style="background-color:green;color:white;padding:3px;border-radius:2px">POST</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+- **Corpo da Solicitação:**
+    ```json
+    {
+        "username": "User Example",
+        "password": "password"
+    }
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[WebReinvent](https://webreinvent.com/)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[Cyber-Duck](https://cyber-duck.co.uk)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Jump24](https://jump24.co.uk)**
-- **[Redberry](https://redberry.international/laravel/)**
-- **[Active Logic](https://activelogic.com)**
-- **[byte5](https://byte5.de)**
-- **[OP.GG](https://op.gg)**
+### Cadastrar Usuário: `/api/user`
+- **Descrição:** Rota para cadastrar um novo usuário.
+- **Escopo: [Aberto]**
+- **Método:** <span style="background-color:green;color:white;padding:3px;border-radius:2px">POST</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+- **Corpo da Solicitação:**
+    ```json
+    {
+        "name": "User Example",
+        "email": "user@example.com",
+        "password": "password"
+    }
 
-## Contributing
+### Logout: `/api/logout`
+- **Descrição:** Rota para deslogar um usuário (Revogar access token).
+- **Escopo: [admin,user]**
+- **Método:** <span style="background-color:red;color:white;padding:3px;border-radius:2px">DELETE</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+### Cadastrar Usuário: `/api/user/{id}`
+- **Descrição:** Rota para tornar um usuário administrador do sistema.
+- **Escopo: [admin]**
+- **Método:** <span style="background-color:#be8227;color:white;padding:3px;border-radius:2px">PUT</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
 
-## Code of Conduct
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Cadastrar Produto: `/api/produto`
+- **Descrição:** Rota para cadastrar um novo produto.
+- **Escopo: [admin]**
+- **Método:** <span style="background-color:green;color:white;padding:3px;border-radius:2px">POST</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
+- **Corpo da Solicitação:**
+    ```json
+    {
+        "nome" : "Exemplo produto",
+        "descricao" : "Exemplo de descrição de produto",
+        "preco" : 10.00
+        "quantidade" : 100
+    }
 
-## Security Vulnerabilities
+### Atualizar os dados de um produto: `/api/produto/{id}`
+- **Descrição:** Rota para alterar os dados de um produto.
+- **Escopo: [admin]**
+- **Método:** <span style="background-color:#be8227;color:white;padding:3px;border-radius:2px">PUT</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
+- **Corpo da Solicitação:**
+    ```json
+    {
+        "nome" : "Exemplo produto",
+        "descricao" : "Exemplo de descrição de produto",
+        "preco" : 10.00
+        "quantidade" : 100
+    }
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Deletar um produto cadastrado: `/api/produto/{id}`
+- **Descrição:** Rota para deletar um produto cadastrado.
+- **Escopo: [admin]**
+- **Método:** <span style="background-color:red;color:white;padding:3px;border-radius:2px">DELETE</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
 
-## License
+### Listar todos os produtos: `/api/produto`
+- **Descrição:** Rota para listar todos os produtos cadastrados.
+- **Escopo: [admin,user]**
+- **Método:** <span style="background-color:#9526b8;color:white;padding:3px;border-radius:2px">GET</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+### Realizar uma compra `/user/compra/{id}`
+- **Descrição:** Rota para realizar a compra de um produto.
+- **Escopo: [admin,user]**
+- **Método:** <span style="background-color:green;color:white;padding:3px;border-radius:2px">POST</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
+
+### Listar Compras: `/api/user/compra/`
+- **Descrição:** Rota para listar todas as compras realizadas pelo usuário.
+- **Escopo: [admin,user]**
+- **Método:** <span style="background-color:#9526b8;color:white;padding:3px;border-radius:2px">GET</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
+
+### Listar Compras: `/api/user/compra/{id}`
+- **Descrição:** Rota para listar uma compra realizada pelo usuário.
+- **Escopo: [admin,user]**
+- **Método:** <span style="background-color:#9526b8;color:white;padding:3px;border-radius:2px">GET</span>
+- **Headers:**
+    - Content-Type: application/json
+    - accept: application/json
+    - Authorization: Bearer [seu-token]
+

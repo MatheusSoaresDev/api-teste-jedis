@@ -13,7 +13,7 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         /*Produto::factory(50)->create();
-        User::factory(50)->create();
+        User::factory(50)->create();*/
 
         Role::factory()->create([
             'role' => 'admin',
@@ -21,7 +21,7 @@ class DatabaseSeeder extends Seeder
 
         Role::factory()->create([
             'role' => 'user',
-        ]);*/
+        ]);
 
         User::factory()->create([
             'name' => 'John Doe',

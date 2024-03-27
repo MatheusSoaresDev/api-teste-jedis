@@ -16,11 +16,6 @@ class Role extends Model
     protected $table = 'role';
     public $timestamps = true;
 
-    protected static function booted(): void
-    {
-        static::creating(fn(Role $role) => $role->id = (string) Uuid::uuid4());
-    }
-
     public function users(): BelongsToMany
     {
         return $this->belongsToMany(User::class);
